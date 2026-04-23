@@ -18,7 +18,7 @@ La fatiga muscular reduce la capacidad del músculo para controlar cargas y mant
 ## *Desarrollo de la practica* 
 El laboratorio se dividió en tres partes principales:
 
-###***PARTE A – Captura de la señal emulada***
+### *PARTE A – Captura de la señal emulada*
 
 /a. Configurar el generador de señales biológicas en modo EMG, simulando
 aproximadamente cinco contracciones musculares voluntarias.
@@ -39,7 +39,7 @@ simuladas./
 <em>Imagen . .</em>
 </p>
 
-###***PARTE B – Captura de la señal de paciente***
+### *PARTE B – Captura de la señal de paciente*
 
 a. Colocar los electrodos sobre el grupo muscular definido por el grupo (por
 ejemplo, antebrazo o bíceps).
@@ -64,7 +64,7 @@ Fourier
 <em>Imagen . .</em>
 </p>
 
-###***PARTE C – Análisis espectral mediante FFT***
+### *PARTE C – Análisis espectral mediante FFT*
 
 a. Aplicar la Transformada Rápida de Fourier (FFT) a cada contracción de la
 señal EMG real.
@@ -104,20 +104,19 @@ Como resultado, el espectro EMG se comprime y pierde componentes de alta frecuen
 
 En el contexto deportivo, los parámetros frecuenciales de la señal EMG (como la MNF y MDF) se utilizan para evaluar cómo responde el músculo durante el ejercicio y detectar la aparición de fatiga.
 
-**Alcances** 
+### *Alcances* 
 
 * **Monitoreo de fatiga en tiempo real:**
 Durante actividades prolongadas (ciclismo, running, entrenamiento de fuerza), la disminución progresiva de la frecuencia media o mediana indica que el músculo está entrando en fatiga. Esto permite identificar el punto en el que el rendimiento comienza a deteriorarse.
 
 * **Optimización del entrenamiento:**
 Los entrenadores pueden usar estos parámetros para: ajustar la intensidad y duración del ejercicio, evitar el sobreentrenamiento o diseñar rutinas más eficientes
-
 Por ejemplo, si la frecuencia disminuye muy rápido, puede indicar que la carga es demasiado alta para el atleta.
 
 * **Prevención de lesiones:** La fatiga muscular está asociada con una pérdida de control neuromuscular, lo que aumenta el riesgo de lesiones.
 El análisis frecuencial permite detectar fatiga antes de que aparezcan fallos mecánicos en el movimiento.
 
-**Posibles limitaciones**
+### *Posibles limitaciones*
 
 * **Influencia del movimiento (condiciones dinámicas):** En el deporte real, los movimientos son dinámicos (correr, saltar, pedalear), lo que introduce: Cambios en la posición de los electrodos/Variaciones en la longitud muscular/Ruido por movimiento (artefactos)
 Esto puede distorsionar el espectro de la señal EMG y afectar la estimación de la frecuencia.
@@ -137,7 +136,26 @@ entrenamiento de atletas./
 
 ## *Preguntas para la discusión*
 
- ¿Cambian los valores de frecuencia media y mediana a medida que el
-músculo se acerca a la fatiga? ¿A qué podría atribuirse este cambio?
- ¿Cómo justifica el uso de herramientas como la transformada de Fourier en
-escenarios como, por ejemplo, terapias de rehabilitación?
+* **¿Cambian los valores de frecuencia media y mediana a medida que el músculo se acerca a la fatiga?**
+
+Sí. A medida que el músculo se fatiga, tanto la frecuencia media como la frecuencia mediana tienden a disminuir progresivamente.
+
+Esto ocurre porque el contenido de la señal EMG se desplaza hacia frecuencias más bajas, fenómeno conocido como corrimiento espectral.
+
+* **¿A qué podría atribuirse este cambio?**
+  
+La disminución de la frecuencia media y la frecuencia mediana está asociada a cambios en el comportamiento eléctrico del músculo cuando aparece la fatiga.
+
+Durante una contracción prolongada, el músculo comienza a acumular metabolitos como el lactato y se producen cambios en el pH. Esto afecta la membrana de las fibras musculares, provocando que los impulsos eléctricos se propaguen más lentamente. Como consecuencia, las señales electromiográficas se vuelven más “largas” en el tiempo, lo que se traduce en un mayor contenido de bajas frecuencias.
+
+Además, el sistema neuromuscular modifica el reclutamiento de unidades motoras para mantener la contracción, incorporando fibras más lentas y resistentes a la fatiga, lo que también influye en la distribución espectral de la señal.
+
+* **¿Cómo justifica el uso de herramientas como la transformada de Fourier en escenarios como, por ejemplo, terapias de rehabilitación?**
+
+La transformada de Fourier permite analizar la señal electromiográfica (EMG) en el dominio de la frecuencia, facilitando la identificación de cambios en la actividad muscular que no son evidentes en el tiempo.
+
+En rehabilitación, esto resulta útil para detectar la fatiga muscular de forma objetiva, mediante la disminución de parámetros como la frecuencia media y mediana. Además, permite hacer seguimiento al progreso del paciente, evaluando cómo cambia la respuesta muscular a lo largo del tratamiento.
+
+También ayuda a ajustar la intensidad de los ejercicios terapéuticos, evitando sobrecargas y favoreciendo una recuperación más controlada.
+
+En conjunto, esta herramienta permite obtener información cuantitativa que apoya la evaluación y el control de la función muscular durante la rehabilitación.
