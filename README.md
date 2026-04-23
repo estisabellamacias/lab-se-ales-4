@@ -86,6 +86,15 @@ diagnóstica en electromiografía.
 <em>Imagen . .</em>
 </p>
 
+## *Diagrama de flujo*
+
+<p align="center">
+<img src="diagrama de flujo/.jpg" width="600">
+</p>
+<p align="center">
+<em>Imagen . .</em>
+</p>
+
 ## *Analisis de resultados*
 
 ***1. Identifique el mecanismo fisiológico mediante el cual parámetros como la frecuencia media y frecuencia mediana experimentan cambios a medida que el músculo tiende a fatigarse.***
