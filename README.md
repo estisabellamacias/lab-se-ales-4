@@ -35,10 +35,16 @@ El laboratorio se dividió en tres partes principales:
 <p align="center">
 <img src="PARTE A/punto e - A.jpeg" width="600">
 </p>
+<p align="center">
+<em>Calculo de frecuencias señal emulada.</em>
+</p>
+
+#### Analizar cómo varían estas frecuencias a lo largo de las contracciones simuladas:
+Las frecuencias media (MNF) y mediana (MDF) tienden a disminuir a lo largo de las contracciones, lo que indica un desplazamiento del contenido espectral hacia frecuencias más bajas. Este comportamiento es característico de la fatiga muscular, ya que refleja cambios en la conducción de las fibras musculares y en el reclutamiento de unidades motoras.
 
 ### *PARTE B – Captura de la señal de paciente*
 
-* **EMG Fatiga:**
+* **EMG fatiga:**
   
 <p align="center">
 <img src="PARTE B/punto b -1.jpeg" width="600">
@@ -47,8 +53,11 @@ El laboratorio se dividió en tres partes principales:
 <p align="center">
 <img src="PARTE B/punto b - 5.jpeg" width="600">
 </p>
+<p align="center">
+<em>Calculo de frecuencias EMG fatiga.</em>
+</p>
 
-* **EMG Normal:**
+* **EMG normal:**
 
 <p align="center">
 <img src="PARTE B/punto b - 3.jpeg" width="600">
@@ -57,11 +66,14 @@ El laboratorio se dividió en tres partes principales:
 <p align="center">
 <img src="PARTE B/punto b - 4.jpeg" width="600">
 </p>
+<p align="center">
+<em>Calculo de frecuencias EMG normal.</em>
+</p>
 
-
+#### Discutir la relación entre los cambios de frecuencia y la fisiología de la fatiga muscular. 
+La disminución de la frecuencia media (MNF) y mediana (MDF) se relaciona con la fatiga muscular, ya que ocurre una reducción en la velocidad de conducción de las fibras y cambios en el reclutamiento de unidades motoras. Esto provoca un desplazamiento del espectro hacia frecuencias más bajas, reflejando el deterioro fisiológico del músculo durante el esfuerzo prolongado.
 
 ### *PARTE C – Análisis espectral mediante FFT*
-
 
 <p align="center">
 <img src="PARTE C/punto c -1.jpeg" width="600">
@@ -79,8 +91,8 @@ El laboratorio se dividió en tres partes principales:
 <img src="PARTE C/punto c - 4.jpeg" width="600">
 </p>
 
-
-
+#### Redactar conclusiones sobre el uso del análisis espectral como herramienta diagnóstica en electromiografía. 
+El análisis espectral mediante FFT es una herramienta útil en electromiografía, ya que permite identificar cambios en el contenido de frecuencia asociados a la fatiga muscular, como la disminución de componentes de alta frecuencia y el desplazamiento del espectro. Sin embargo, su uso como herramienta diagnóstica debe complementarse con otras técnicas, debido a la influencia del ruido y la variabilidad en condiciones reales.
 
 ## *Diagrama de flujo*
 
