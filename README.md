@@ -88,7 +88,7 @@ El laboratorio se dividió en tres partes principales:
 <img src="Diagrama de flujo/toma señal del generador.png" width="600">
 </p>
 <p align="center">
-<em>Imagen . Diagrama de flujo del codigo para la toma de la señal del generador.</em>
+<em>Diagrama de flujo del codigo para la toma de la señal del generador.</em>
 </p>
 
 
@@ -96,14 +96,14 @@ El laboratorio se dividió en tres partes principales:
 <img src="Diagrama de flujo/Adquicision del EMG.png" width="600">
 </p>
 <p align="center">
-<em>Imagen . Diagrama de flujo del codigo para la adquisición del EMG.</em>
+<em>Diagrama de flujo del codigo para la adquisición del EMG.</em>
 </p>
 
 <p align="center">
 <img src="Diagrama de flujo/procesamiento de la señal.png" width="600">
 </p>
 <p align="center">
-<em>Imagen . Diagrama de flujo del procesamiento de la señal EMG.</em>
+<em>Diagrama de flujo del procesamiento de la señal EMG.</em>
 </p>
 
 
@@ -390,10 +390,11 @@ Esto puede llevar a interpretaciones erróneas si se analiza de forma aislada.
 
 ## *Conclusiones*
 
-/Tras la realización de esta práctica, el estudiante debe concluir incluyendo una
-breve reflexión sobre la factibilidad de emplear técnicas espectrales en la detección
-de la fatiga muscular en escenarios no controlados como, por ejemplo, durante
-entrenamiento de atletas./
+Tras la realización de esta práctica, se evidencia que las técnicas espectrales, como el análisis de la frecuencia media (MNF) y la frecuencia mediana (MDF), son herramientas útiles para identificar cambios asociados a la fatiga muscular, ya que permiten observar el desplazamiento del contenido frecuencial de la señal EMG.
+
+Sin embargo, su aplicación en escenarios como el entrenamiento de atletas, presenta limitaciones importantes. Factores como el ruido, el movimiento, la variabilidad en la colocación de los electrodos y las condiciones del entorno pueden afectar significativamente la calidad de la señal, dificultando la interpretación de los resultados.
+
+A pesar de esto, con un adecuado preprocesamiento (filtrado, segmentación y reducción de ruido) y condiciones de medición relativamente estables, estas técnicas pueden ser factibles como herramientas de apoyo para el monitoreo de la fatiga.
 
 ## *Preguntas para la discusión*
 
