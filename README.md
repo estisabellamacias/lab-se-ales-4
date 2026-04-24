@@ -107,7 +107,7 @@ diagnóstica en electromiografía.
 
 ### Codigo para la toma de la señal del generador:
 
-***Módulo DAQ:***
+***DAQ:***
 
 * **`nidaqmx.Task()`**
   Crea la tarea de adquisición y permite la comunicación con la DAQ.
@@ -124,7 +124,7 @@ diagnóstica en electromiografía.
 * **`adquirir_datos()`**
   Función principal de adquisición: Inicializa la DAQ, lee datos continuamente, controla el flujo de adquisición.
 
-***Módulo de procesamiento de datos:***
+***Procesamiento de datos:***
 
 * **`np.roll()`**
   Implementa un buffer circular desplazando los datos para mantener solo las muestras más recientes.
@@ -138,7 +138,7 @@ diagnóstica en electromiografía.
 * **`time.sleep()`**
   Introduce pausas cortas para evitar sobrecarga del sistema.
 
-***Módulo de interfaz gráfica:***
+***Interfaz gráfica:***
 
 * **`tk.Tk()`**
   Crea la ventana principal de la aplicación.
@@ -152,7 +152,7 @@ diagnóstica en electromiografía.
 * **`toggle_guardado()`**
   Controla el estado de grabación y actualiza la interfaz.
 
-***Módulo de visualización:***
+***Visualización:***
 
 * **`plt.subplots()`**
   Crea la figura y los ejes para graficar la señal.
@@ -172,14 +172,14 @@ diagnóstica en electromiografía.
 * **`actualizar_plot()`**
   Función encargada de refrescar la visualización continuamente.
 
-***Módulo de ejecución concurrente:***
+***Ejecución concurrente:***
 
 * **`threading.Thread()`**
   Ejecuta la adquisición de datos en paralelo a la interfaz gráfica, evitando bloqueos.
 
 ### Código para la adquisición del EMG
 
-***Módulo DAQ:***
+***DAQ:***
 
 * **`nidaqmx.Task()`**
   Crea la tarea de adquisición y gestiona la comunicación con la DAQ.
@@ -193,7 +193,7 @@ diagnóstica en electromiografía.
 * **`task.read()`**
   Realiza la lectura completa de las muestras definidas (`muestras`) desde la DAQ.
 
-***Módulo de procesamiento de datos:***
+***Procesamiento de datos:***
 
 * **`filtro_pasabanda()`**
   Función que aplica un filtro pasabanda a la señal para eliminar ruido fuera del rango de interés.
@@ -207,7 +207,7 @@ diagnóstica en electromiografía.
 * **`np.array()`**
   Convierte los datos adquiridos a un arreglo de NumPy para facilitar su procesamiento.
 
-***Módulo de almacenamiento***
+***Almacenamiento***
 
 * **`np.savetxt()`**
   Guarda la señal procesada en un archivo `.txt` en formato de una sola columna.
@@ -232,7 +232,7 @@ diagnóstica en electromiografía.
 * **`plt.show()`**
   Muestra la gráfica final.
 
-***Módulo de manejo de errores:***
+***Manejo de errores:***
 
 * **`try / except`**
   Permite capturar errores durante la conexión o adquisición con la DAQ, evitando que el programa falle abruptamente.
