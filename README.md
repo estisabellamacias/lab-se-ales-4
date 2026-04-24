@@ -20,71 +20,67 @@ El laboratorio se dividió en tres partes principales:
 
 ### *PARTE A – Captura de la señal emulada*
 
-/a. Configurar el generador de señales biológicas en modo EMG, simulando
-aproximadamente cinco contracciones musculares voluntarias.
-b. Adquirir y almacenar la señal generada para su posterior análisis.
-c. Segmentar la señal obtenida en las cinco contracciones simuladas.
-d. Calcular para cada contracción:
- Frecuencia media
- Frecuencia mediana
-e. Presentar los resultados de cada contracción en una tabla y representar
-gráficamente la evolución de las frecuencias.
-f. Analizar cómo varían estas frecuencias a lo largo de las contracciones
-simuladas./
+<p align="center">
+<img src="PARTE A/señal generador .jpeg" width="600">
+</p>
 
 <p align="center">
-<img src="PARTE A/.jpg" width="600">
+<img src="PARTE A/segmento de 5 segundos generador.jpeg" width="600">
 </p>
+
 <p align="center">
-<em>Imagen . .</em>
+<img src="PARTE A/punto d -A.jpeg" width="600">
+</p>
+
+<p align="center">
+<img src="PARTE A/punto e - A.jpeg" width="600">
 </p>
 
 ### *PARTE B – Captura de la señal de paciente*
 
-a. Colocar los electrodos sobre el grupo muscular definido por el grupo (por
-ejemplo, antebrazo o bíceps).
-b. Registrar la señal EMG de un paciente o voluntario sano realizando
-contracciones repetidas hasta la fatiga (o la falla).
-c. Aplicar un filtro pasa banda (20–450 Hz) para eliminar ruido y artefactos.
-d. Dividir la señal en el número de contracciones realizadas.
-e. Calcular para cada contracción:
- Frecuencia media
- Frecuencia mediana
-f. Graficar los resultados obtenidos y analizar la tendencia de la frecuencia
-media y mediana a medida que progresa la fatiga muscular.
-g. Discutir la relación entre los cambios de frecuencia y la fisiología de la fatiga
-muscular.
-NOTA: Para observar las frecuencias se debe realizar y graficar la transformada de
-Fourier
+* **EMG Fatiga:**
+  
+<p align="center">
+<img src="PARTE B/punto b -1.jpeg" width="600">
+</p>
 
 <p align="center">
-<img src="PARTE B/.jpg" width="600">
+<img src="PARTE B/punto b - 5.jpeg" width="600">
 </p>
+
+* **EMG Normal:**
+
 <p align="center">
-<em>Imagen . .</em>
+<img src="PARTE B/punto b - 3.jpeg" width="600">
 </p>
+
+<p align="center">
+<img src="PARTE B/punto b - 4.jpeg" width="600">
+</p>
+
+
 
 ### *PARTE C – Análisis espectral mediante FFT*
 
-a. Aplicar la Transformada Rápida de Fourier (FFT) a cada contracción de la
-señal EMG real.
-b. Graficar el espectro de amplitud (frecuencia vs. magnitud) para observar
-cómo cambia el contenido de frecuencia.
-c. Comparar los espectros de las primeras contracciones con los de las últimas.
-d. Identificar la reducción del contenido de alta frecuencia asociada con la fatiga
-muscular.
-e. Calcular y discutir el desplazamiento del pico espectral y su relación con el
-esfuerzo sostenido.
-f. Redactar conclusiones sobre el uso del análisis espectral como herramienta
-diagnóstica en electromiografía. 
-
 
 <p align="center">
-<img src="PARTE C/.jpg" width="600">
+<img src="PARTE C/punto c -1.jpeg" width="600">
 </p>
+
 <p align="center">
-<em>Imagen . .</em>
+<img src="PARTE C/punto c -2.jpeg" width="600">
 </p>
+
+<p align="center">
+<img src="PARTE C/punto c - 3.jpeg" width="600">
+</p>
+
+<p align="center">
+<img src="PARTE C/punto c - 4.jpeg" width="600">
+</p>
+
+
+
 
 ## *Diagrama de flujo*
 
