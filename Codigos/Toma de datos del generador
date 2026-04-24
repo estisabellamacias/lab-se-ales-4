@@ -1,0 +1,134 @@
+# -*- coding: utf-8 -*-
+"""
+Script para captura de señales usando la DAQ.
+Este script permite configurar la frecuencia de muestreo y duración de la señal;
+realiza la captura internamente y posteriormente grafica la señal completa. 
+Es una captura eficiente y exacta en el tiempo. Es útil si quiero grabar la señal
+para procesarla posteriormente usando otro script, lenguaje, entorno, etc.
+
+Se requiere instalar: 
+Librería de uso de la DAQ
+!python -m pip install nidaqmx     
+
+Driver NI DAQ mx
+!python -m nidaqmx installdriver   
+
+Created on Thu Aug 21 08:36:05 2025
+@author: Carolina Corredor
+"""
+
+import nidaqmx
+from nidaqmx.constants import AcquisitionType
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+import numpy as np
+import tkinter as tk
+from tkinter import messagebox
+import threading
+import time
+
+# --- Configuración Inicial ---
+fs = 2000
+dispositivo = 'Dev2/ai0'
+archivo_nombre = "datos_daq.txt"
+
+class DAQApp:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Visualizador DAQ Fluido")
+        
+        self.grabando = False
+        self.corriendo = True
+        
+        # AJUSTE PARA FLUIDEZ: Buffer más grande para ver más repeticiones
+        # 4000 muestras a 2000Hz = 2 segundos de historia en pantalla
+        self.max_muestras_pantalla = 4000 
+        self.datos_buffer = np.zeros(self.max_muestras_pantalla)
+        
+        # Interfaz
+        self.frame_ctrl = tk.Frame(root)
+        self.frame_ctrl.pack(side=tk.TOP, fill=tk.X)
+        
+        self.btn_grabar = tk.Button(self.frame_ctrl, text="🔴 INICIAR GRABACIÓN", 
+                                   command=self.toggle_guardado, bg="#2ecc71", fg="white", font=('Arial', 10, 'bold'))
+        self.btn_grabar.pack(pady=10, side=tk.LEFT, padx=20)
+        
+        self.lbl_status = tk.Label(self.frame_ctrl, text="MODO: SOLO VISUALIZANDO", fg="blue", font=('Arial', 10))
+        self.lbl_status.pack(side=tk.LEFT)
+
+        # Configuración de la Gráfica (Estilo Osciloscopio)
+        self.fig, self.ax = plt.subplots(figsize=(8, 4), dpi=100)
+        self.line, = self.ax.plot(np.arange(self.max_muestras_pantalla) / fs, self.datos_buffer, lw=1.5, color='#00ff00')
+        self.ax.set_facecolor('black') # Fondo negro para mejor contraste
+        self.fig.patch.set_facecolor('#f0f0f0')
+        
+        self.ax.set_ylim(-0.5, 3.5) # Ajustado para ver picos de 3V con margen
+        self.ax.set_xlim(0, self.max_muestras_pantalla / fs)
+        self.ax.set_xlabel("Tiempo (s)")
+        self.ax.set_ylabel("Voltaje (V)")
+        self.ax.grid(color='gray', linestyle='--', linewidth=0.5)
+        
+        self.canvas = FigureCanvasTkAgg(self.fig, master=root)
+        self.canvas.get_tk_widget().pack(fill=tk.BOTH, expand=True)
+
+        # Hilo de adquisición
+        self.thread = threading.Thread(target=self.adquirir_datos, daemon=True)
+        self.thread.start()
+        
+        # Actualizar gráfica
+        self.actualizar_plot()
+
+    def toggle_guardado(self):
+        self.grabando = not self.grabando
+        if self.grabando:
+            self.btn_grabar.config(text="⏹ DETENER GRABACIÓN", bg="#e74c3c")
+            self.lbl_status.config(text="ESTADO: ESCRIBIENDO EN .TXT", fg="red")
+        else:
+            self.btn_grabar.config(text="🔴 INICIAR GRABACIÓN", bg="#2ecc71")
+            self.lbl_status.config(text="MODO: SOLO VISUALIZANDO", fg="blue")
+
+    def adquirir_datos(self):
+        try:
+            with nidaqmx.Task() as task:
+                task.ai_channels.add_ai_voltage_chan(dispositivo)
+                task.timing.cfg_samp_clk_timing(fs, sample_mode=AcquisitionType.CONTINUOUS)
+                task.start()
+                
+                while self.corriendo:
+                    # Leemos bloques pequeños (50 muestras) para que el flujo sea constante
+                    lectura = task.read(number_of_samples_per_channel=50)
+                    
+                    # Actualizamos el buffer circular (desplazamos datos viejos a la izquierda)
+                    self.datos_buffer = np.roll(self.datos_buffer, -len(lectura))
+                    self.datos_buffer[-len(lectura):] = lectura
+                    
+                    if self.grabando:
+                        with open(archivo_nombre, "a") as f:
+                            np.savetxt(f, lectura, fmt='%.4f') # Guardado más eficiente
+                    
+                    # Un pequeño sleep para no saturar el hilo, pero menor al anterior
+                    time.sleep(0.005)
+                    
+        except Exception as e:
+            print(f"Error: {e}")
+
+    def actualizar_plot(self):
+        """ Refresco de la pantalla """
+        # Solo actualizamos los datos de la línea, no toda la figura (más rápido)
+        self.line.set_ydata(self.datos_buffer)
+        self.canvas.draw_idle() # draw_idle es más eficiente que draw()
+        
+        # 30ms de refresco = ~33 FPS, lo cual se ve muy fluido al ojo humano
+        self.root.after(30, self.actualizar_plot)
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = DAQApp(root)
+    
+    # Manejar el cierre de la ventana
+    def on_closing():
+        app.corriendo = False
+        root.destroy()
+        
+    root.protocol("WM_DELETE_WINDOW", on_closing)
+    root.mainloop()
