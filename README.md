@@ -4,7 +4,7 @@
 La fatiga muscular reduce la capacidad del músculo para controlar cargas y mantener contracciones eficaces, como consecuencia de la acumulación de lactato y la disminución del adenosín trifosfato (ATP). Un músculo fatigado tiene más riesgo de lesiones, por lo que es importante identificar la fatiga muscular de manera objetiva y oportuna. Una de las formas más comunes de evaluar la fatiga muscular es medir el lactato en la sangre ya que, durante ejercicios muy intensos, su nivel aumenta debido al proceso anaeróbico que tiene lugar para la generación de energía. No obstante, este método es invasivo y poco práctico en escenarios no controlados. Métodos alternativos incluyen la electromiografía de superficie (sEMG), técnica que registra la actividad eléctrica de los músculos desde la piel, capturando la suma de los potenciales de acción generados por las fibras musculares durante la contracción de las unidades motoras. Existen métricas, tanto en el dominio del tiempo como en el de la frecuencia, que pueden aportar información referente a la fatiga muscular. 
 
 ## *Objetivos* 
-***Objetivo General:*** dentificar cambios en las características espectrales de una señal electromiográfica (EMG) cuando se alcanza la fatiga muscular.
+***Objetivo General:*** Identificar cambios en las características espectrales de una señal electromiográfica (EMG) cuando se alcanza la fatiga muscular.
 
 ***Objetivos especificos:***
 1. Aplicar el filtrado de señales continuas para el procesamiento una señal electromiográfica (EMG).
