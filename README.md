@@ -293,10 +293,10 @@ El análisis espectral mediante FFT es una herramienta útil en electromiografí
   Calcula la densidad espectral de potencia (PSD) de cada segmento.
 
 * **`np.sum()`**
-  Se usa para calcular la **frecuencia media (MNF)**.
+  Se usa para calcular la frecuencia media (MNF).
 
 * **`np.cumsum()`**
-  Permite calcular la **frecuencia mediana (MDF)** acumulando la energía espectral.
+  Permite calcular la frecuencia mediana (MDF) acumulando la energía espectral.
 
 * **`np.where()`**
   Encuentra el punto donde se cumple la condición para calcular la MDF.
