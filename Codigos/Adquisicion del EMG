@@ -1,0 +1,73 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Thu Apr 23 08:36:52 2026
+
+@author: pipe1
+"""
+
+import nidaqmx
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.io import wavfile
+from scipy.fft import fft, fftfreq
+from scipy.signal import find_peaks, butter, filtfilt 
+
+# --- Parámetros de Captura ---
+fs = 1000               # Frecuencia de muestreo (Hz)
+duracion = 10         # Tiempo de captura (segundos)
+muestras = int(fs * duracion)
+canal_daq = "Dev4/ai0"  # Cambia "Dev1" por el nombre de tu DAQ y "ai0" por el pin analógico
+
+print(f"Iniciando captura en {canal_daq} por {duracion} segundos...")
+
+def filtro_pasabanda(signal, fs, f_low, f_high, orden=4):
+
+    nyquist = fs / 2
+    low = f_low / nyquist
+    high = f_high / nyquist
+    b, a = butter(orden, [low, high], btype='band')
+    señal_filtrada = filtfilt(b, a, signal)
+
+    return señal_filtrada
+
+
+try:
+    with nidaqmx.Task() as task:
+        # Configurar el canal analógico
+        task.ai_channels.add_ai_voltage_chan(canal_daq)
+        
+        # Configurar el reloj de muestreo
+        task.timing.cfg_samp_clk_timing(rate=fs, 
+                                        sample_mode=nidaqmx.constants.AcquisitionType.FINITE, 
+                                        samps_per_chan=muestras)
+        
+        # Iniciar lectura
+        datos_emg = task.read(number_of_samples_per_channel=muestras)
+        print("Captura finalizada exitosamente.")
+
+    # Convertir a arreglo de numpy
+    
+    emg= filtro_pasabanda(datos_emg, fs, 20, 450)
+    
+    datos_emg = np.array(emg)
+# %%
+
+
+    # --- Guardar en archivo .txt ---
+    # Se guarda en una sola columna en el mismo directorio del script
+    np.savetxt("emg_datos.txt", datos_emg, header="Voltaje_EMG", comments='')
+    print("Datos guardados en 'emg_datos.txt'")
+
+    # --- Graficar la señal cruda ---
+    tiempo = np.linspace(0, duracion, muestras)
+    
+    plt.figure(figsize=(10, 4))
+    plt.plot(tiempo, datos_emg, color='b')
+    plt.title("Señal EMG capturada (Dominio del Tiempo)")
+    plt.xlabel("Tiempo (s)")
+    plt.ylabel("Amplitud (V)")
+    plt.grid(True)
+    plt.show()
+
+except Exception as e:
+    print(f"Error en la conexión con el DAQ: {e}")
