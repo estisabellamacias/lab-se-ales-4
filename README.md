@@ -103,6 +103,14 @@ diagnóstica en electromiografía.
 <em>Imagen . Diagrama de flujo del codigo para la adquisición del EMG.</em>
 </p>
 
+<p align="center">
+<img src="Diagrama de flujo/procesamiento de la señal.png" width="600">
+</p>
+<p align="center">
+<em>Imagen . Diagrama de flujo del procesamiento de la señal EMG.</em>
+</p>
+
+
 ## *Codigos*
 
 ### Codigo para la toma de la señal del generador:
@@ -207,7 +215,7 @@ diagnóstica en electromiografía.
 * **`np.array()`**
   Convierte los datos adquiridos a un arreglo de NumPy para facilitar su procesamiento.
 
-***Almacenamiento***
+***Almacenamiento:***
 
 * **`np.savetxt()`**
   Guarda la señal procesada en un archivo `.txt` en formato de una sola columna.
@@ -242,6 +250,106 @@ diagnóstica en electromiografía.
 * **`print()`**
   Muestra mensajes informativos: Inicio de la captura, finalización exitosa, guardado de datos, errores en la adquisición.
 
+### Código procesamiento digital de sañales aplicado a EMG
+
+***Carga de datos:***
+
+* **`np.loadtxt()`**
+  Carga los datos desde archivos `.txt` para su procesamiento.
+
+* **Manejo de dimensiones (`datos[:, 0]`)**
+  Permite seleccionar correctamente la señal cuando el archivo tiene múltiples columnas.
+
+***Procesamiento de señal:***
+
+* **`signal.butter()`**
+  Diseña un filtro pasabanda (20–450 Hz) para señales EMG.
+
+* **`signal.filtfilt()`**
+  Aplica el filtro sin desfase, preservando la forma de la señal.
+
+* **`np.arange()`**
+  Genera el vector de tiempo asociado a la señal.
+
+***Segmentación:***
+
+* **Indexación por rangos (`inicio`, `fin`)**
+  Permite extraer segmentos específicos de la señal (contracciones).
+
+* **Condiciones lógicas (`(tiempo >= inicio) & (tiempo <= fin)`)**
+  Selecciona intervalos de tiempo dentro de la señal.
+
+***Análisis frecuencial:***
+
+* **`signal.welch()`**
+  Calcula la densidad espectral de potencia (PSD) de cada segmento.
+
+* **`np.sum()`**
+  Se usa para calcular la **frecuencia media (MNF)**.
+
+* **`np.cumsum()`**
+  Permite calcular la **frecuencia mediana (MDF)** acumulando la energía espectral.
+
+* **`np.where()`**
+  Encuentra el punto donde se cumple la condición para calcular la MDF.
+
+***Transformada de Fourier:***
+
+* **`np.fft.rfft()`**
+  Calcula la transformada rápida de Fourier para señales reales.
+
+* **`np.fft.rfftfreq()`**
+  Genera el eje de frecuencias correspondiente a la FFT.
+
+* **`np.hamming()`**
+  Aplica una ventana para reducir efectos de borde antes de la FFT.
+
+***Detección y suavizado:***
+
+* **`gaussian_filter1d()`**
+  Suaviza el espectro de frecuencia para facilitar la identificación de picos.
+
+* **`np.argmax()`**
+  Encuentra la frecuencia donde ocurre el pico máximo.
+
+* **Condiciones de rango (`(f>=60)&(f<=400)`)**
+  Limita la búsqueda de picos a un rango relevante de frecuencias.
+
+***Visualización:***
+
+* **`plt.figure()`**
+  Crea nuevas figuras para graficar.
+
+* **`plt.subplots()`**
+  Permite crear múltiples gráficas en una sola figura.
+
+* **`plt.plot()`**
+  Grafica señales en el tiempo o en frecuencia.
+
+* **`plt.axvspan()`**
+  Resalta visualmente segmentos de la señal.
+
+* **`plt.text()`**
+  Añade etiquetas dentro de la gráfica.
+
+* **`plt.title()`**, **`plt.xlabel()`**, **`plt.ylabel()`**
+  Configuran títulos y etiquetas.
+
+* **`plt.legend()`**
+  Muestra la leyenda de las gráficas.
+
+* **`plt.show()`**
+  Renderiza las figuras en pantalla.
+
+***Control de errores:***
+
+* **`try / except`**
+  Maneja errores en la carga de archivos, evitando que el programa se detenga.
+
+***Salida en consola:***
+
+* **`print()`**
+  Muestra: Estado de carga de archivos - Resultados de análisis - Comparaciones finales
 
 ## *Analisis de resultados*
 
