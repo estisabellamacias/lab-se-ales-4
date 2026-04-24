@@ -1,0 +1,157 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import signal
+from scipy.ndimage import gaussian_filter1d
+import sys
+
+# ==============================================================================
+# 1. PROCESAMIENTO CÓDIGO 1: DATOS DAQ (SIMULACIÓN Y ESTADÍSTICOS)
+# ==============================================================================
+nombre_archivo = 'datos_daq.txt'
+fs = 1000
+
+print(f"--- Cargando datos desde {nombre_archivo} ---")
+try:
+    datos = np.loadtxt(nombre_archivo)
+    signal_full = datos[:, 0] if len(datos.shape) > 1 else datos
+    print(f"Datos cargados exitosamente. Total muestras: {len(signal_full)}")
+except:
+    print(f"No se encontró {nombre_archivo}, saltando a señales de Nicolas...")
+    signal_full = None
+
+if signal_full is not None:
+    # FILTRO EMG
+    b, a = signal.butter(4, [20/(fs/2), 450/(fs/2)], btype='band')
+    signal_full = signal.filtfilt(b, a, signal_full)
+    tiempo_full = np.arange(len(signal_full)) / fs
+
+    # GRÁFICA 1: Señal Completa
+    plt.figure(figsize=(12, 5))
+    plt.plot(tiempo_full, signal_full, color='black', linewidth=0.5)
+    plt.title(f"Señal EMG Emulada Completa - Adquisición de {tiempo_full[-1]:.1f}s (Punto b)")
+    plt.xlabel("Tiempo (s)"); plt.ylabel("Amplitud (V)"); plt.grid(True, alpha=0.5)
+    plt.show()
+
+    # SEGMENTOS DAQ
+    segmentos_tiempos = [(0.3, 0.9), (1.3, 1.9), (2.3, 2.9), (3.3, 3.9), (4.3, 4.9)]
+
+    # GRÁFICA 2: Vista 5 segundos con colores
+    t_limite_view = 5
+    sig_view = signal_full[:int(t_limite_view * fs)]
+    t_view = tiempo_full[:int(t_limite_view * fs)]
+
+    plt.figure(figsize=(12, 5))
+    plt.plot(t_view, sig_view, color='gray', alpha=0.4, linewidth=0.5, label='Señal Completa')
+    colores_daq = ['cyan', 'lime', 'magenta', 'orange', 'red']
+    for i, (inicio, fin) in enumerate(segmentos_tiempos):
+        plt.axvspan(inicio, fin, color=colores_daq[i % len(colores_daq)], alpha=0.3, label=f'C{i+1}')
+        plt.text((inicio + fin) / 2, np.max(sig_view) * 0.9, f'C{i+1}', ha='center', fontweight='bold', color=colores_daq[i % len(colores_daq)])
+
+    plt.title("Segmentación de las 5 Contracciones Simuladas (Punto c)")
+    plt.xlabel("Tiempo (s)"); plt.ylabel("Amplitud (V)"); plt.legend(); plt.show()
+
+    # ANÁLISIS DAQ (ESTADÍSTICOS)
+    resultados_mnf_daq, resultados_mdf_daq = [], []
+    print("\n--- Resultados de Análisis Frecuencial DAQ (Punto e) ---")
+    print(f"{'Contracción':<15} | {'Tiempo (s)':<12} | {'F. Media (MNF) [Hz]':<20} | {'F. Mediana (MDF) [Hz]':<20}")
+    print("-" * 80)
+
+    for i, (inicio, fin) in enumerate(segmentos_tiempos):
+        trozo = signal_full[int(inicio*fs):int(fin*fs)]
+        # Mejora actividad
+        umbral = np.mean(np.abs(trozo)) + 0.3*np.std(trozo)
+        trozo = trozo[np.abs(trozo) > umbral]
+        
+        if len(trozo) > 10:
+            f, psd = signal.welch(trozo * np.hamming(len(trozo)), fs=fs, nperseg=len(trozo)//2)
+            mnf = np.sum(f * psd) / np.sum(psd)
+            mdf = f[np.where(np.cumsum(psd) >= np.sum(psd)/2.0)[0][0]]
+            resultados_mnf_daq.append(mnf); resultados_mdf_daq.append(mdf)
+            print(f"C{i+1:<13} | {inicio:.1f}-{fin:.1f}  | {mnf:<20.2f} | {mdf:<20.2f}")
+
+    # GRÁFICA 3: Evolución DAQ
+    plt.figure(figsize=(10, 6))
+    plt.plot(range(1, len(resultados_mnf_daq)+1), resultados_mnf_daq, 'bo-', label='MNF')
+    plt.plot(range(1, len(resultados_mdf_daq)+1), resultados_mdf_daq, 'rs--', label='MDF')
+    plt.title("Evolución de Frecuencias EMG - DAQ"); plt.xlabel("Número de Contracción"); plt.ylabel("Frecuencia (Hz)"); plt.legend(); plt.show()
+
+
+# ==============================================================================
+# 2. PROCESAMIENTO CÓDIGO 2: SEÑALES NICOLAS (NORMAL Y FATIGA)
+# ==============================================================================
+configuracion = {
+    'señal_nicolas.txt': {
+        'segmentos': [(0.68, 0.98), (1.28, 1.58), (2.02, 2.32), (2.68, 2.98), (4.71, 5.01), (5.31, 5.61), (6.01, 6.31), (6.8, 7.0), (7.49, 7.79), (8.1, 8.3), (8.71, 9.01), (9.7, 9.9)],
+        'titulo': 'Señal de Fatiga (Nicolas)'
+    },
+    'señal_normal_nicolas.txt': {
+        'segmentos': [(0.10, 0.50), (1.15, 1.60), (2.35, 2.80), (3.55, 4.00), (4.65, 5.15), (5.75, 6.15), (6.80, 7.30), (8.15, 8.65), (9.30, 9.80)],
+        'titulo': 'Señal Normal (Nicolas)'
+    }
+}
+
+extremos_comparativa = {}
+
+for archivo, info in configuracion.items():
+    print(f"\n" + "="*60 + f"\n PROCESANDO: {archivo}\n" + "="*60)
+    try:
+        datos_nic = np.loadtxt(archivo, skiprows=1)
+        sig = datos_nic[:, 1] if len(datos_nic.shape) > 1 else datos_nic
+    except: continue
+
+    b, a = signal.butter(4, [20/(fs/2), 450/(fs/2)], btype='band')
+    sig_filt = signal.filtfilt(b, a, sig)
+    tiempo = np.arange(len(sig_filt)) / fs
+
+    res_mnf, res_mdf, segmentos_data = [], [], []
+    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(12, 10))
+    colores_nic = plt.cm.rainbow(np.linspace(0, 1, len(info['segmentos'])))
+
+    print(f"{'Contr.':<8} | {'Inicio':<8} | {'MNF (Hz)':<10} | {'MDF (Hz)':<10}")
+    print("-" * 50)
+
+    for i, (inicio, fin) in enumerate(info['segmentos']):
+        idx = (tiempo >= inicio) & (tiempo <= fin)
+        trozo = sig_filt[idx]
+        if len(trozo) < 10: continue
+        segmentos_data.append(trozo)
+        f_w, psd_w = signal.welch(trozo, fs=fs, nperseg=len(trozo)//2)
+        mnf = np.sum(f_w * psd_w) / np.sum(psd_w)
+        mdf = f_w[np.where(np.cumsum(psd_w) >= np.sum(psd_w)/2)[0][0]]
+        res_mnf.append(mnf); res_mdf.append(mdf)
+        print(f"C{i+1:<7} | {inicio:<8.2f} | {mnf:<10.2f} | {mdf:<10.2f}")
+
+        ax1.axvspan(inicio, fin, color=colores_nic[i], alpha=0.3)
+        ax1.text((inicio + fin) / 2, np.max(sig_filt)*0.8, f'C{i+1}', ha='center', fontweight='bold', color=colores_nic[i])
+
+    ax1.plot(tiempo, sig_filt, color='black', linewidth=0.4, alpha=0.6)
+    ax1.set_title(f"Segmentación Temporal: {info['titulo']}")
+    ax2.plot(range(1, len(res_mnf)+1), res_mnf, 'bo-', label='MNF')
+    ax2.plot(range(1, len(res_mdf)+1), res_mdf, 'rs--', label='MDF')
+    ax2.set_title(f"Evolución Frecuencial: {info['titulo']}"); ax2.legend(); plt.show()
+
+    if 'normal' in archivo: extremos_comparativa['normal'] = (segmentos_data[0], 'Normal')
+    else: extremos_comparativa['fatiga'] = (segmentos_data[-1], 'Fatiga')
+
+    # FFT TODAS LAS CONTRACCIONES
+    plt.figure(figsize=(10, 6))
+    nfft = 2048
+    max_global = max([np.max(np.abs(np.fft.rfft(s * np.hamming(len(s)), n=nfft))) for s in segmentos_data])
+    for i, seg in enumerate(segmentos_data):
+        f_f, mag = np.fft.rfftfreq(nfft, 1/fs), np.abs(np.fft.rfft(seg * np.hamming(len(seg)), n=nfft))
+        plt.plot(f_f, mag/max_global, alpha=0.5, label=f'C{i+1}')
+    plt.title(f"Espectros FFT: {info['titulo']}"); plt.xlim(0, 450); plt.legend(ncol=2); plt.show()
+
+# COMPARATIVA FINAL CON SUAVIZADO
+if 'normal' in extremos_comparativa and 'fatiga' in extremos_comparativa:
+    plt.figure(figsize=(10, 6))
+    print(f"\n--- COMPARACIÓN DE PICOS EXTREMOS  ---")
+    for clave, color in [('normal', 'blue'), ('fatiga', 'red')]:
+        seg, label = extremos_comparativa[clave]
+        f = np.fft.rfftfreq(2048, 1/fs)
+        mag = np.abs(np.fft.rfft(seg * np.hamming(len(seg)), n=2048))
+        mag_suav = gaussian_filter1d(mag/np.max(mag), sigma=2)
+        plt.plot(f, mag_suav, label=label, color=color, lw=2)
+        pico = f[(f>=60)&(f<=400)][np.argmax(mag_suav[(f>=60)&(f<=400)])]
+        print(f"{label:<10} | Pico Espectral: {pico:.2f} Hz")
+    plt.title("Comparativa Final: Primera vs Última"); plt.xlim(0, 450); plt.legend(); plt.show()
