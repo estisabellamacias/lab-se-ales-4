@@ -89,11 +89,159 @@ diagnóstica en electromiografía.
 ## *Diagrama de flujo*
 
 <p align="center">
-<img src="diagrama de flujo/.jpg" width="600">
+<img src="Diagrama de flujo/toma señal del generador.png" width="600">
 </p>
 <p align="center">
-<em>Imagen . .</em>
+<em>Imagen . Diagrama de flujo del codigo para la toma de la señal del generador.</em>
 </p>
+
+
+<p align="center">
+<img src="Diagrama de flujo/Adquicision del EMG.png" width="600">
+</p>
+<p align="center">
+<em>Imagen . Diagrama de flujo del codigo para la adquisición del EMG.</em>
+</p>
+
+## *Codigos*
+
+### Codigo para la toma de la señal del generador:
+
+***Módulo DAQ:***
+
+* **`nidaqmx.Task()`**
+  Crea la tarea de adquisición y permite la comunicación con la DAQ.
+
+* **`add_ai_voltage_chan()`**
+  Configura el canal de entrada analógica desde donde se captura la señal.
+
+* **`cfg_samp_clk_timing()`**
+  Define la frecuencia de muestreo (`fs`) y el modo continuo de adquisición.
+
+* **`task.read()`**
+  Lee bloques de datos desde la DAQ en tiempo real.
+
+* **`adquirir_datos()`**
+  Función principal de adquisición: Inicializa la DAQ, lee datos continuamente, controla el flujo de adquisición.
+
+***Módulo de procesamiento de datos:***
+
+* **`np.roll()`**
+  Implementa un buffer circular desplazando los datos para mantener solo las muestras más recientes.
+
+* **`np.zeros()`**
+  Inicializa el buffer de almacenamiento de datos.
+
+* **`np.savetxt()`**
+  Guarda los datos adquiridos en un archivo `.txt`.
+
+* **`time.sleep()`**
+  Introduce pausas cortas para evitar sobrecarga del sistema.
+
+***Módulo de interfaz gráfica:***
+
+* **`tk.Tk()`**
+  Crea la ventana principal de la aplicación.
+
+* **`tk.Button()`**
+  Botón para iniciar/detener la grabación de datos.
+
+* **`tk.Label()`**
+  Muestra el estado del sistema (grabando o visualizando).
+
+* **`toggle_guardado()`**
+  Controla el estado de grabación y actualiza la interfaz.
+
+***Módulo de visualización:***
+
+* **`plt.subplots()`**
+  Crea la figura y los ejes para graficar la señal.
+
+* **`ax.plot()`**
+  Inicializa la gráfica de la señal.
+
+* **`set_ydata()`**
+  Actualiza los valores de la señal en la gráfica en tiempo real.
+
+* **`draw_idle()`**
+  Refresca la gráfica de forma eficiente.
+
+* **`root.after()`**
+  Controla la actualización periódica de la gráfica.
+
+* **`actualizar_plot()`**
+  Función encargada de refrescar la visualización continuamente.
+
+***Módulo de ejecución concurrente:***
+
+* **`threading.Thread()`**
+  Ejecuta la adquisición de datos en paralelo a la interfaz gráfica, evitando bloqueos.
+
+### Código para la adquisición del EMG
+
+***Módulo DAQ:***
+
+* **`nidaqmx.Task()`**
+  Crea la tarea de adquisición y gestiona la comunicación con la DAQ.
+
+* **`add_ai_voltage_chan()`**
+  Configura el canal de entrada analógica (`canal_daq`) desde donde se captura la señal.
+
+* **`cfg_samp_clk_timing()`**
+  Define la frecuencia de muestreo (`fs`) y el modo de adquisición finito (número fijo de muestras).
+
+* **`task.read()`**
+  Realiza la lectura completa de las muestras definidas (`muestras`) desde la DAQ.
+
+***Módulo de procesamiento de datos:***
+
+* **`filtro_pasabanda()`**
+  Función que aplica un filtro pasabanda a la señal para eliminar ruido fuera del rango de interés.
+
+* **`butter()`**
+  Diseña el filtro digital pasabanda según las frecuencias de corte.
+
+* **`filtfilt()`**
+  Aplica el filtro a la señal sin desfase (filtrado hacia adelante y hacia atrás).
+
+* **`np.array()`**
+  Convierte los datos adquiridos a un arreglo de NumPy para facilitar su procesamiento.
+
+***Módulo de almacenamiento***
+
+* **`np.savetxt()`**
+  Guarda la señal procesada en un archivo `.txt` en formato de una sola columna.
+
+***Módulo de visualización:***
+
+* **`np.linspace()`**
+  Genera el vector de tiempo para graficar la señal.
+
+* **`plt.figure()`**
+  Crea la figura donde se mostrará la señal.
+
+* **`plt.plot()`**
+  Grafica la señal en el dominio del tiempo.
+
+* **`plt.title()`**, **`plt.xlabel()`**, **`plt.ylabel()`**
+  Configuran el título y las etiquetas de la gráfica.
+
+* **`plt.grid()`**
+  Activa la cuadrícula para mejorar la visualización.
+
+* **`plt.show()`**
+  Muestra la gráfica final.
+
+***Módulo de manejo de errores:***
+
+* **`try / except`**
+  Permite capturar errores durante la conexión o adquisición con la DAQ, evitando que el programa falle abruptamente.
+
+***Salida:***
+
+* **`print()`**
+  Muestra mensajes informativos: Inicio de la captura, finalización exitosa, guardado de datos, errores en la adquisición.
+
 
 ## *Analisis de resultados*
 
